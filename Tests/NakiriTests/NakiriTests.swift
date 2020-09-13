@@ -43,5 +43,5 @@ final class NakiriTests: XCTestCase {
 
     static var allTests = [
         ("testExample", testExample),
-    Nakiri]
+    ]
 }
