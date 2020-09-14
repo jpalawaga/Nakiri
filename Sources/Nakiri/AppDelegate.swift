@@ -6,14 +6,9 @@ public class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDele
     var revertButton: NSMenuItem?
     var lastUrl = ""
     var counter: Int = 0
-    var recentlyReverted = false
+    let test = PasteboardWatcher()
     
     func newlyCopiedItem(copiedString: String) {
-        if recentlyReverted {
-            recentlyReverted = false
-            return
-        }
-        
         lastUrl = copiedString
         var trimmedURL = stripClickjackers(url: copiedString)
         trimmedURL = removeUnnecessaryQueryParams(url: trimmedURL) 
@@ -22,29 +17,21 @@ public class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDele
             NSPasteboard.general.clearContents()
             NSPasteboard.general.setString(trimmedURL, forType: NSPasteboard.PasteboardType.string)
             statusBarItem.button?.title = "🔪"
-            
-            if (revertButton != nil) {
-                statusBarItem.menu?.removeItem(revertButton!)
-            }
-            revertButton = statusBarItem.menu?.addItem(
-                withTitle: "Revert \(trimmedURL)",
-                action: #selector(AppDelegate.revert),
-                keyEquivalent: "")
-            
+            revertButton?.title = "Revert \(trimmedURL)"
+            revertButton?.isHidden = false
         } else {
-            statusBarItem.button?.title = ""
+            hideButton()
         }
     }
 
     @objc func revert() {
+        // We don't want to trigger the URL cleaning again.
+        test.changeCount += 1
+
         NSPasteboard.general.clearContents()
         NSPasteboard.general.setString(lastUrl, forType: NSPasteboard.PasteboardType.string)
-        statusBarItem.button?.title = ""
-        if (revertButton != nil) {
-            statusBarItem.menu?.removeItem(revertButton!)
-        }
         
-        recentlyReverted = true
+        hideButton()
     }
     
     public func applicationDidFinishLaunching(_ aNotification: Notification) {
@@ -59,13 +46,22 @@ public class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDele
           action: #selector(AppDelegate.quit),
           keyEquivalent: "")
         
-        let test = PasteboardWatcher()
+        revertButton = statusBarMenu.addItem(
+            withTitle: "Revert",
+            action: #selector(AppDelegate.revert),
+            keyEquivalent: ""
+        )
+
         test.delegate = self
         test.startPolling()
     }
-    
+
     @objc func quit() {
         NSApplication.shared.terminate(self)
+    }
+    
+    private func hideButton() {
+        statusBarItem.button?.title = ""
     }
 }
 

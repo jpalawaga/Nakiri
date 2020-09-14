@@ -8,7 +8,7 @@ class PasteboardWatcher : NSObject {
 
     // to keep track of count of objects currently copied
     // also helps in determining if a new object is copied
-    private var changeCount : Int
+    public var changeCount : Int
 
     // used to perform polling to identify if url with desired kind is copied
     private var timer: Timer?
@@ -34,7 +34,7 @@ class PasteboardWatcher : NSObject {
     /// method invoked continuously by timer
     /// - Note: To keep this method as private I referred this answer at stackoverflow - [Swift - NSTimer does not invoke a private func as selector](http://stackoverflow.com/a/30947182/217586)
     @objc private func checkForChangesInPasteboard() {
-        if pasteboard.changeCount != changeCount {
+        if pasteboard.changeCount > changeCount {
             let copiedString = pasteboard.string(forType: NSPasteboard.PasteboardType.string) ?? ""
             self.delegate?.newlyCopiedItem(copiedString: copiedString)
 
