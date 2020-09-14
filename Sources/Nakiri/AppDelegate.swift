@@ -58,6 +58,11 @@ public func stripClickjackers(url: String) -> String {
                 return queryParams["q"] ?? url
             }
         }
+
+        if (((components.host?.hasSuffix("facebook.com")) != nil) && (components.path == "/l.php")) {
+            let queryParams = convertQueryItemsToDict(input: components.queryItems)
+            return queryParams["u"]?.removingPercentEncoding ?? url
+        }
     }
 
     return url
@@ -71,7 +76,8 @@ func removeUnnecessaryQueryParams(url: String) -> String {
         "utm_medium",
         "utm_campaign",
         "utm_term",
-        "utm_content"
+        "utm_content",
+        "fbclid",
     ]
 
     if var components = URLComponents(string: url) {
@@ -84,10 +90,16 @@ func removeUnnecessaryQueryParams(url: String) -> String {
                 print("\(String(describing: queryItem.name)): \(String(describing: queryItem.value))")
             }
             components.queryItems = qps
-            return components.string!
+            return removeLastQuestion(url: components.string!)
         }
     }
     
-    return url
+    return removeLastQuestion(url: url)
 }
 
+func removeLastQuestion(url: String) -> String {
+    if url.hasSuffix("?") {
+        return String(url.dropLast())
+    }
+    return url
+}
