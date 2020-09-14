@@ -14,8 +14,10 @@ copySupportFiles:
 	cp ${SUPPORTFILES}/MainInfo.plist ${APP_DIRECTORY}/Contents/Info.plist
 	cp ${BUILD_DIRECTORY}/${CFBUNDLEEXECUTABLE} ${APP_DIRECTORY}/Contents/MacOS/
 
-run: build
-	open -a ${APP_DIRECTORY}
+run: clean install
+	pkill ${CFBUNDLEEXECUTABLE} || true
+	sleep 1
+	open -Fa ${CFBUNDLEEXECUTABLE}
 
 clean:
 	rm -rf .build
