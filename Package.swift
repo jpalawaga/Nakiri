@@ -5,12 +5,18 @@ import PackageDescription
 
 let package = Package(
     name: "Nakiri",
-    dependencies: [
+    products: [
+    .library(
+        name: "Nakiri", targets: ["Nakiri"]),
     ],
+    dependencies: [],
     targets: [
         .target(
             name: "Nakiri",
             dependencies: []),
+        .target(
+            name: "NakiriApp",
+            dependencies: ["Nakiri"]),
         .testTarget(
             name: "NakiriTests",
             dependencies: ["Nakiri"])

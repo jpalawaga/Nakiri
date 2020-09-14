@@ -1,13 +1,13 @@
 import Cocoa
 
-class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDelegate {
+public class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDelegate {
 
   var statusBarItem: NSStatusItem!
   var counter: Int = 0
     
     func newlyCopiedItem(copiedString: String) {
         var trimmedURL = stripClickjackers(url: copiedString)
-        trimmedURL = removeUnnecessaryQueryParams(url: trimmedURL) ?? ""
+        trimmedURL = removeUnnecessaryQueryParams(url: trimmedURL) 
 
         if (trimmedURL.starts(with: "http")) {
             NSPasteboard.general.clearContents()
@@ -18,7 +18,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDelegate {
         }
     }
 
-  func applicationDidFinishLaunching(_ aNotification: Notification) {
+    public func applicationDidFinishLaunching(_ aNotification: Notification) {
     let statusBar = NSStatusBar.system
     statusBarItem = statusBar.statusItem(
       withLength: NSStatusItem.variableLength)
@@ -50,7 +50,7 @@ func convertQueryItemsToDict(input: [URLQueryItem]?) -> [String:String] {
     return converted
 }
 
-func stripClickjackers(url: String) -> String {
+public func stripClickjackers(url: String) -> String {
     if let components = URLComponents(string: url) {
         if ((components.host?.hasSuffix("google.com")) != nil) {
             if (components.path == "/url") {

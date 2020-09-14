@@ -1,47 +1,17 @@
 import XCTest
 import class Foundation.Bundle
+@testable import Nakiri
 
 final class NakiriTests: XCTestCase {
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct
-        // results.
-
-        // Some of the APIs that we use below are available in macOS 10.13 and above.
-        guard #available(macOS 10.13, *) else {
-            return
-        }
-
-        let fooBinary = productsDirectory.appendingPathComponent("Nakiri")
-
-        let process = Process()
-        process.executableURL = fooBinary
-
-        let pipe = Pipe()
-        process.standardOutput = pipe
-
-        try process.run()
-        process.waitUntilExit()
-
-        let data = pipe.fileHandleForReading.readDataToEndOfFile()
-        let output = String(data: data, encoding: .utf8)
-
-        XCTAssertEqual(output, "Hello, world!\n")
+    
+    func testStripClickJackers() throws {
+        let googleClickjacker = "https://www.google.com/url?q=https://twitter.com/SenTedCruz/status/1304754228477472768&sa=D&source=hangouts&ust=1600110258819000&usg=AFQjCNGJVUiLTqJxCBvZSb64ob_rrFMDtA"
+        
+        let cleaned = stripClickjackers(url: googleClickjacker)
+        XCTAssertEqual( "https://twitter.com/SenTedCruz/status/1304754228477472768", cleaned)
     }
-
-    /// Returns path to the built products directory.
-    var productsDirectory: URL {
-      #if os(macOS)
-        for bundle in Bundle.allBundles where bundle.bundlePath.hasSuffix(".xctest") {
-            return bundle.bundleURL.deletingLastPathComponent()
-        }
-        fatalError("couldn't find the products directory")
-      #else
-        return Bundle.main.bundleURL
-      #endif
-    }
-
+    
     static var allTests = [
-        ("testExample", testExample),
+        ("testStripClickJackers", testStripClickJackers),
     ]
 }

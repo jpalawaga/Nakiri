@@ -12,7 +12,7 @@ build:
 copySupportFiles:
 	mkdir -p ${APP_DIRECTORY}/Contents/MacOS/
 	cp ${SUPPORTFILES}/MainInfo.plist ${APP_DIRECTORY}/Contents/Info.plist
-	cp ${BUILD_DIRECTORY}/${CFBUNDLEEXECUTABLE} ${APP_DIRECTORY}/Contents/MacOS/
+	cp ${BUILD_DIRECTORY}/${CFBUNDLEEXECUTABLE}App ${APP_DIRECTORY}/Contents/MacOS/
 
 run: clean install
 	pkill ${CFBUNDLEEXECUTABLE} || true
