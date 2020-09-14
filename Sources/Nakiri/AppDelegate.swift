@@ -6,7 +6,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDelegate {
   var counter: Int = 0
     
     func newlyCopiedItem(copiedString: String) {
-        let trimmedURL = removeUnnecessaryQueryParams(url: copiedString) ?? ""
+        var trimmedURL = stripClickjackers(url: copiedString)
+        trimmedURL = removeUnnecessaryQueryParams(url: trimmedURL) ?? ""
+
         if (trimmedURL.starts(with: "http")) {
             NSPasteboard.general.clearContents()
             NSPasteboard.general.setString(trimmedURL, forType: NSPasteboard.PasteboardType.string)
@@ -39,8 +41,29 @@ class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDelegate {
   }
 }
 
+func convertQueryItemsToDict(input: [URLQueryItem]?) -> [String:String] {
+    let converted = input?.reduce(into: [String:String]()) {
+        if ($1.value != nil) {
+            $0[$1.name] = $1.value
+        }
+    } ?? [String:String]()
+    return converted
+}
 
-func removeUnnecessaryQueryParams(url: String) -> String? {
+func stripClickjackers(url: String) -> String {
+    if let components = URLComponents(string: url) {
+        if ((components.host?.hasSuffix("google.com")) != nil) {
+            if (components.path == "/url") {
+                let queryParams = convertQueryItemsToDict(input: components.queryItems)
+                return queryParams["q"] ?? url
+            }
+        }
+    }
+
+    return url
+}
+
+func removeUnnecessaryQueryParams(url: String) -> String {
     let queryParamsToRemove = [
         "u",
         "h",
@@ -50,9 +73,8 @@ func removeUnnecessaryQueryParams(url: String) -> String? {
         "utm_term",
         "utm_content"
     ]
-    let url = URL(string: url)
 
-    if var components = URLComponents(url: url!, resolvingAgainstBaseURL: false) {
+    if var components = URLComponents(string: url) {
         var qps = [URLQueryItem]()
         if let queryItems = components.queryItems {
             for queryItem in queryItems {
@@ -62,9 +84,10 @@ func removeUnnecessaryQueryParams(url: String) -> String? {
                 print("\(String(describing: queryItem.name)): \(String(describing: queryItem.value))")
             }
             components.queryItems = qps
-            return components.string
+            return components.string!
         }
     }
     
-    return url?.absoluteString
+    return url
 }
+
