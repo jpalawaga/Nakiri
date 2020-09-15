@@ -1,12 +1,10 @@
 import Cocoa
 
 public class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDelegate {
-
-    var statusBarItem: NSStatusItem!
-    var revertButton: NSMenuItem?
-    var lastUrl = ""
-    var counter: Int = 0
-    let test = PasteboardWatcher()
+    private var statusBarItem: NSStatusItem!
+    private var revertButton: NSMenuItem?
+    private var lastUrl = ""
+    private let pasteboardWatcher = PasteboardWatcher()
     
     func newlyCopiedItem(copiedString: String) {
         lastUrl = copiedString
@@ -26,7 +24,7 @@ public class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDele
 
     @objc func revert() {
         // We don't want to trigger the URL cleaning again.
-        test.changeCount += 1
+        pasteboardWatcher.changeCount += 1
 
         NSPasteboard.general.clearContents()
         NSPasteboard.general.setString(lastUrl, forType: NSPasteboard.PasteboardType.string)
@@ -52,8 +50,8 @@ public class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDele
           action: #selector(AppDelegate.quit),
           keyEquivalent: "")
 
-        test.delegate = self
-        test.startPolling()
+        pasteboardWatcher.delegate = self
+        pasteboardWatcher.startPolling()
     }
 
     @objc func quit() {
