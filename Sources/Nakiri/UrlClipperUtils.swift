@@ -20,6 +20,7 @@ public func stripClickjackers(url: String) -> String {
 
 func removeUnnecessaryQueryParams(url: String) -> String {
     let queryParamsToRemove = [
+        // Universal?
         "u",
         "h",
         "utm_source",
@@ -28,6 +29,19 @@ func removeUnnecessaryQueryParams(url: String) -> String {
         "utm_term",
         "utm_content",
         "fbclid",
+
+        // Twitter
+        "src", "vertical",
+
+        // Google (Images)
+        "rlz", "source", "sxsrf", "tbm", "sa", "ved", "biw", "bih",
+
+        // Spotify
+        "si",
+
+        // Amazon
+        "dchild", "keywords", "qid", "sr", "psc", "cv_ct_cx", // Do we want do keep or delete keywords?
+        "pd_rd_i", "pd_rd_r", "pd_rd_w", "pd_rd_wg", "pf_rd_p", "pf_rd_r",
     ]
 
     if var components = URLComponents(string: url) {
@@ -48,10 +62,7 @@ func removeUnnecessaryQueryParams(url: String) -> String {
 }
 
 func removeLastQuestion(url: String) -> String {
-    if url.hasSuffix("?") {
-        return String(url.dropLast())
-    }
-    return url
+    return url.hasSuffix("?") ? String(url.dropLast()) : url
 }
 
 func friendlyTruncateUrl(url: String, desiredLength: Int = 40) -> String {
