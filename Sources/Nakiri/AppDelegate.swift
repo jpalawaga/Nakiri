@@ -17,7 +17,7 @@ public class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDele
             NSPasteboard.general.clearContents()
             NSPasteboard.general.setString(trimmedURL, forType: NSPasteboard.PasteboardType.string)
             statusBarItem.button?.title = "🔪"
-            revertButton?.title = "Revert \(trimmedURL)"
+            revertButton?.title = "Revert \(friendlyTruncateUrl(url: trimmedURL))"
             revertButton?.isHidden = false
         } else {
             hideButton()
@@ -40,17 +40,17 @@ public class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDele
 
         let statusBarMenu = NSMenu(title: "Nakiri Menu")
         statusBarItem.menu = statusBarMenu
-
-        statusBarMenu.addItem(
-          withTitle: "Quit",
-          action: #selector(AppDelegate.quit),
-          keyEquivalent: "")
         
         revertButton = statusBarMenu.addItem(
             withTitle: "Revert",
             action: #selector(AppDelegate.revert),
             keyEquivalent: ""
         )
+
+        statusBarMenu.addItem(
+          withTitle: "Quit",
+          action: #selector(AppDelegate.quit),
+          keyEquivalent: "")
 
         test.delegate = self
         test.startPolling()

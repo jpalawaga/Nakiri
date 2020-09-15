@@ -53,3 +53,14 @@ func removeLastQuestion(url: String) -> String {
     }
     return url
 }
+
+func friendlyTruncateUrl(url: String, desiredLength: Int = 40) -> String {
+    if let regex = try? NSRegularExpression(pattern: "https:\\/\\/(www\\.)?", options: .caseInsensitive) {
+        let mutableUrl = NSMutableString(string: url)
+        regex.replaceMatches(in: mutableUrl, range: NSMakeRange(0, url.count), withTemplate: "")
+
+        return String(mutableUrl.substring(to:min(desiredLength, mutableUrl.length)) + "...")
+    }
+
+    return url[url.startIndex..<url.index(url.startIndex, offsetBy: desiredLength)] + "..."
+}
