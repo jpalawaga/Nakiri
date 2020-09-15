@@ -17,7 +17,34 @@ final class NakiriTests: XCTestCase {
         
     }
     
+    func testCleanUrl() {
+        let amazonTest = "https://www.amazon.com/Google-Pixel-4a-Unlocked-Smartphone/dp/B08CFSZLQ4/ref=sr_1_1_sspa?spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUExQTM1MVFEUlY3UTg4JmVuY3J5cHRlZElkPUEwMDAwMzMxWUtZSFozMDROWkpPJmVuY3J5cHRlZEFkSWQ9QTA5MDI5NzQ2QjBKSFZFSlpCSEQmd2lkZ2V0TmFtZT1zcF9hdGYmYWN0aW9uPWNsaWNrUmVkaXJlY3QmZG9Ob3RMb2dDbGljaz10cnVl"
+        XCTAssertEqual(
+            "https://www.amazon.com/Google-Pixel-4a-Unlocked-Smartphone/dp/B08CFSZLQ4/ref=sr_1_1_sspa",
+            cleanUrl(url: amazonTest)
+        )
+
+        let amazonTest2 = "https://www.amazon.com/Style-Bungie-Adjustable-Bungies-Graphite/dp/B001OW7JW0/ref=sxts_sxwds-bia-wc-drs1_0?cv_ct_cx=office+chair&dchild=1&keywords=office+chair&pd_rd_i=B001OW7JW0&pd_rd_r=e2ee4f95-3b60-4010-87ea-e3914588dcc9&pd_rd_w=Q7pID&pd_rd_wg=y639j&pf_rd_p=f3f1f1cd-8368-48df-ac69-94019fb84e3f&pf_rd_r=00FM1VHM9QHM3SD9D4H6&psc=1&qid=1600120741&sr=1-1-f7123c3d-6c2e-4dbe-9d7a-6185fb77bc58"
+        XCTAssertEqual(
+            "https://www.amazon.com/Style-Bungie-Adjustable-Bungies-Graphite/dp/B001OW7JW0/ref=sxts_sxwds-bia-wc-drs1_0",
+            cleanUrl(url: amazonTest2)
+        )
+
+        let googleImagesTest =  "https://www.google.com/search?q=battery+energy+density+over+time&rlz=1C5CHFA_enUS862US863&sxsrf=ALeKk01_-Azzjpwq_kGhpAoVVtLMXyummw:1599768483440&source=lnms&tbm=isch&sa=X&ved=2ahUKEwj4kLaBst_rAhXslXIEHd7SDggQ_AUoAXoECA0QAw&biw=1680&bih=822#imgrc=BvCfoMaIMvFsKM"
+        XCTAssertEqual(
+            "https://www.google.com/search?q=battery+energy+density+over+time#imgrc=BvCfoMaIMvFsKM",
+            cleanUrl(url: googleImagesTest)
+        )
+
+        let spotifyTest = "https://open.spotify.com/track/4uLU6hMCjMI75M1A2tKUQC?si=Sjc4fsOYRv6Wfl5LjIsqig"
+        XCTAssertEqual(
+            "https://open.spotify.com/track/4uLU6hMCjMI75M1A2tKUQC",
+            cleanUrl(url: spotifyTest)
+        )
+    }
+
     static var allTests = [
         ("testStripClickJackers", testStripClickJackers),
+        ("testCleanUrl", testCleanUrl),
     ]
 }

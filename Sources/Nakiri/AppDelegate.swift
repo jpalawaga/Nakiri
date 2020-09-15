@@ -8,14 +8,13 @@ public class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDele
     
     func newlyCopiedItem(copiedString: String) {
         lastUrl = copiedString
-        var trimmedURL = stripClickjackers(url: copiedString)
-        trimmedURL = removeUnnecessaryQueryParams(url: trimmedURL) 
+        let cleanedUrl = cleanUrl(url: copiedString)
 
-        if (trimmedURL.starts(with: "http")) {
+        if (cleanedUrl.starts(with: "http")) {
             NSPasteboard.general.clearContents()
-            NSPasteboard.general.setString(trimmedURL, forType: NSPasteboard.PasteboardType.string)
+            NSPasteboard.general.setString(cleanedUrl, forType: NSPasteboard.PasteboardType.string)
             statusBarItem.button?.title = "🔪"
-            revertButton?.title = "Revert \(friendlyTruncateUrl(url: trimmedURL))"
+            revertButton?.title = "Revert \(friendlyTruncateUrl(url: cleanedUrl))"
             revertButton?.isHidden = false
         } else {
             hideButton()

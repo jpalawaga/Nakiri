@@ -1,5 +1,10 @@
 import Foundation
 
+public func cleanUrl(url: String) -> String {
+    let trimmedURL = stripClickjackers(url: url)
+    return removeUnnecessaryQueryParams(url: trimmedURL)
+}
+
 public func stripClickjackers(url: String) -> String {
     if let components = URLComponents(string: url) {
         if ((components.host?.hasSuffix("google.com")) != nil) {
@@ -40,7 +45,7 @@ func removeUnnecessaryQueryParams(url: String) -> String {
         "si",
 
         // Amazon
-        "dchild", "keywords", "qid", "sr", "psc", "cv_ct_cx", // Do we want do keep or delete keywords?
+        "dchild", "keywords", "qid", "sr", "psc", "cv_ct_cx", "spLa", // Do we want do keep or delete keywords?
         "pd_rd_i", "pd_rd_r", "pd_rd_w", "pd_rd_wg", "pf_rd_p", "pf_rd_r",
     ]
 
