@@ -6,6 +6,9 @@ import SwiftUI
 
 let package = Package(
     name: "Nakiri",
+    platforms: [
+        .macOS(.v10_12)
+    ],
     products: [
     .library(
         name: "Nakiri", targets: ["Nakiri"]),
