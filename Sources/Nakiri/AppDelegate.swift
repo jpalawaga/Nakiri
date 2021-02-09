@@ -1,5 +1,6 @@
 import Cocoa
 
+// @TODO: not the standard com.whatever format
 public var PLIST_PATH =  FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Library/LaunchAgents/Nakiri.plist")
 
 public class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDelegate {
