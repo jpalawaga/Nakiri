@@ -36,7 +36,7 @@ func removeUnnecessaryQueryParams(url: String) -> String {
         "fbclid",
 
         // Twitter
-        "src", "vertical",
+        "src", "vertical","ref_src",
 
         // Google (Images)
         "rlz", "source", "sxsrf", "tbm", "sa", "ved", "biw", "bih",

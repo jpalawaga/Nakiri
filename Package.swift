@@ -2,6 +2,7 @@
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
+import SwiftUI
 
 let package = Package(
     name: "Nakiri",
@@ -9,7 +10,8 @@ let package = Package(
     .library(
         name: "Nakiri", targets: ["Nakiri"]),
     ],
-    dependencies: [],
+    dependencies: [
+    ],
     targets: [
         .target(
             name: "Nakiri",
