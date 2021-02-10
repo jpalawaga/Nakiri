@@ -14,8 +14,10 @@ if (!configExist) {
     <false/>
     <key>Label</key>
     <string>Nakiri</string>
-    <key>Program</key>
-    <string>/System/Applications/Nakiri.app</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/open</string><string>/Applications/Nakiri.app</string>
+    </array>
     <key>RunAtLoad</key>
     <true/>
 </dict>

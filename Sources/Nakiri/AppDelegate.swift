@@ -104,6 +104,6 @@ func convertBoolToNSControlState(bool: Bool) -> NSControl.StateValue {
 public class LaunchAgent : Codable {
     public var Label: String
     public var Disabled: Bool
-    public var Program: String
+    public var ProgramArguments: [String]
     public var RunAtLoad: Bool
 }
