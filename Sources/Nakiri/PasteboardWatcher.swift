@@ -26,9 +26,9 @@ class PasteboardWatcher : NSObject {
     
     /// starts polling to identify if url with desired kind is copied
     /// - Note: uses an NSTimer for polling
-    func startPolling () {
+    func startPolling (interval: Double) {
         // setup and start of timer
-        timer = Timer.scheduledTimer(timeInterval: 2, target: self, selector: #selector(self.checkForChangesInPasteboard), userInfo: nil, repeats: true)
+        timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(self.checkForChangesInPasteboard), userInfo: nil, repeats: true)
     }
 
     /// method invoked continuously by timer

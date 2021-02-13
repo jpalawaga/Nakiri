@@ -37,14 +37,14 @@ public class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDele
           keyEquivalent: "")
 
         pasteboardWatcher.delegate = self
-        pasteboardWatcher.startPolling()
+        pasteboardWatcher.startPolling(interval: 1)
     }
 
     func newlyCopiedItem(copiedString: String) {
         lastUrl = copiedString
         let cleanedUrl = cleanUrl(url: copiedString)
 
-        if (cleanedUrl.starts(with: "http")) {
+        if (cleanedUrl.starts(with: "http") && cleanedUrl != lastUrl) {
             NSPasteboard.general.clearContents()
             NSPasteboard.general.setString(cleanedUrl, forType: NSPasteboard.PasteboardType.string)
             statusBarItem.button?.title = "🔪"
