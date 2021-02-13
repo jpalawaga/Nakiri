@@ -55,6 +55,11 @@ public class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDele
         }
     }
 
+    private func hideButton() {
+        statusBarItem.button?.title = ""
+    }
+    
+    // --- Menu Bar Funcs
     @objc func revert() {
         // We don't want to trigger the URL cleaning again.
         pasteboardWatcher.changeCount += 1
@@ -80,16 +85,6 @@ public class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDele
     @objc func quit() {
         NSApplication.shared.terminate(self)
     }
-    
-    private func currentLaunchdState() -> Bool {
-        let currentState = try! PropertyListDecoder().decode(LaunchAgent.self, from: Data(contentsOf: PLIST_PATH))
-
-        return !currentState.Disabled
-    }
-
-    private func hideButton() {
-        statusBarItem.button?.title = ""
-    }
 }
 
 func convertQueryItemsToDict(input: [URLQueryItem]?) -> [String:String] {
@@ -101,20 +96,9 @@ func convertQueryItemsToDict(input: [URLQueryItem]?) -> [String:String] {
     return converted
 }
 
+/**
+ * Helper function to convert a boolean to an NSControlState i.e. true -> on, false -> off.
+ */
 func convertBoolToNSControlState(bool: Bool) -> NSControl.StateValue {
     return bool ? .on : .off
-}
-
-public class LaunchAgent : Codable {
-    public var Label: String
-    public var Disabled: Bool
-    public var ProgramArguments: [String]
-    public var RunAtLoad: Bool
-    
-    public init(Label: String, Disabled: Bool, ProgramArguments: [String], RunAtLoad: Bool) {
-        self.Label = Label
-        self.Disabled = Disabled
-        self.ProgramArguments = ProgramArguments
-        self.RunAtLoad = RunAtLoad
-    }
 }
