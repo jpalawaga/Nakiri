@@ -41,18 +41,27 @@ public class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDele
     }
 
     func newlyCopiedItem(copiedString: String) {
+        if (!isUrlWithQueryParams(url: copiedString)) {
+            lastUrl = ""
+            hideButton()
+            return
+        }
+
         lastUrl = copiedString
         let cleanedUrl = cleanUrl(url: copiedString)
 
-        if (cleanedUrl.starts(with: "http") && cleanedUrl != lastUrl) {
-            NSPasteboard.general.clearContents()
-            NSPasteboard.general.setString(cleanedUrl, forType: NSPasteboard.PasteboardType.string)
-            statusBarItem.button?.title = "🔪"
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(cleanedUrl, forType: NSPasteboard.PasteboardType.string)
+        statusBarItem.button?.title = "🔪"
+
+        if (lastUrl != cleanedUrl) {
             revertButton?.title = "Revert \(friendlyTruncateUrl(url: cleanedUrl))"
             revertButton?.isHidden = false
         } else {
-            hideButton()
+            revertButton?.title = ""
+            revertButton?.isHidden = true
         }
+
     }
 
     private func hideButton() {

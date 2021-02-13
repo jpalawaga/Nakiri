@@ -80,3 +80,12 @@ func friendlyTruncateUrl(url: String, desiredLength: Int = 40) -> String {
 
     return url[url.startIndex..<url.index(url.startIndex, offsetBy: desiredLength)] + "..."
 }
+
+/**
+ * Quick and dirty util to approximate whether or not if we copied a url or not.
+ *
+ * Might be improved with using the url class and etc but this is fine.
+ */
+func isUrlWithQueryParams(url: String) -> Bool {
+    return url.starts(with: "http") && url.contains("?")
+}
