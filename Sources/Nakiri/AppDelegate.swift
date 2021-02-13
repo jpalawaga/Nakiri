@@ -3,6 +3,8 @@ import Cocoa
 // @TODO: not the standard com.whatever format
 public var PLIST_PATH =  FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Library/LaunchAgents/Nakiri.plist")
 
+public var APPLICATION_PATH = "/Applications/Nakiri.app"
+
 public class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDelegate {
     private var statusBarItem: NSStatusItem!
     private var revertButton: NSMenuItem?
@@ -24,8 +26,10 @@ public class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDele
             keyEquivalent: ""
         )
 
-        onLaunchButton = statusBarMenu.addItem(withTitle: "Launch on Startup", action: #selector(AppDelegate.toggleLaunchOnStartup), keyEquivalent: "")
-        onLaunchButton?.state = convertBoolToNSControlState(bool: currentLaunchdState())
+        if (FileManager.default.fileExists(atPath: APPLICATION_PATH)) {
+            onLaunchButton = statusBarMenu.addItem(withTitle: "Launch on Startup", action: #selector(AppDelegate.toggleLaunchOnStartup), keyEquivalent: "")
+            onLaunchButton?.state = convertBoolToNSControlState(bool: currentLaunchdState())
+        }
 
         statusBarMenu.addItem(
           withTitle: "Quit",
@@ -106,4 +110,11 @@ public class LaunchAgent : Codable {
     public var Disabled: Bool
     public var ProgramArguments: [String]
     public var RunAtLoad: Bool
+    
+    public init(Label: String, Disabled: Bool, ProgramArguments: [String], RunAtLoad: Bool) {
+        self.Label = Label
+        self.Disabled = Disabled
+        self.ProgramArguments = ProgramArguments
+        self.RunAtLoad = RunAtLoad
+    }
 }

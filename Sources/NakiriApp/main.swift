@@ -3,26 +3,15 @@ import Cocoa
 import Nakiri
 
 let configExist = FileManager.default.fileExists(atPath: Nakiri.PLIST_PATH.absoluteString)
+let applicationInstalled = FileManager.default.fileExists(atPath: Nakiri.APPLICATION_PATH)
 
-if (!configExist) {
-    try? """
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>Disabled</key>
-    <false/>
-    <key>Label</key>
-    <string>Nakiri</string>
-    <key>ProgramArguments</key>
-    <array>
-        <string>/usr/bin/open</string><string>/Applications/Nakiri.app</string>
-    </array>
-    <key>RunAtLoad</key>
-    <true/>
-</dict>
-</plist>
-""".write(to: Nakiri.PLIST_PATH, atomically: false, encoding: String.Encoding.utf8)
+if (applicationInstalled && !configExist) {
+    let args: [String] = ["/usr/bin/open", Nakiri.APPLICATION_PATH]
+    let launchAgent = LaunchAgent(Label: "Nakiri", Disabled: false, ProgramArguments: args, RunAtLoad: true)
+
+    let encoder = PropertyListEncoder()
+    encoder.outputFormat = .xml
+    try! encoder.encode(launchAgent).write(to: Nakiri.PLIST_PATH)
 }
 
 let delegate = AppDelegate()
