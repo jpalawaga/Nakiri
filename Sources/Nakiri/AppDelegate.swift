@@ -9,10 +9,13 @@ public class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDele
     private var statusBarItem: NSStatusItem!
     private var revertButton: NSMenuItem?
     private var onLaunchButton: NSMenuItem?
+    private var reportButton: NSMenuItem?
     private var lastUrl = ""
     private let pasteboardWatcher = PasteboardWatcher()
 
-    
+    /**
+     * Sets up the menu bar and starts polling
+     */
     public func applicationDidFinishLaunching(_ aNotification: Notification) {
         let statusBar = NSStatusBar.system
         statusBarItem = statusBar.statusItem(withLength: NSStatusItem.variableLength)
@@ -20,12 +23,21 @@ public class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDele
         let statusBarMenu = NSMenu(title: "Nakiri Menu")
         statusBarItem.menu = statusBarMenu
 
+        // Set up the "undo slice" button
         revertButton = statusBarMenu.addItem(
             withTitle: "Revert",
             action: #selector(AppDelegate.revert),
             keyEquivalent: ""
         )
 
+        reportButton = statusBarMenu.addItem(
+            withTitle: "Report improperly trimmed URL",
+            action: #selector(AppDelegate.reportImproperlyTrimmedUri),
+            keyEquivalent: ""
+        )
+
+
+        // Setup the "Launch on Startup" button (only shows if the app is installed)
         if (FileManager.default.fileExists(atPath: APPLICATION_PATH)) {
             onLaunchButton = statusBarMenu.addItem(withTitle: "Launch on Startup", action: #selector(AppDelegate.toggleLaunchOnStartup), keyEquivalent: "")
             onLaunchButton?.state = convertBoolToNSControlState(bool: currentLaunchdState())
@@ -47,6 +59,9 @@ public class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDele
             return
         }
 
+        reportButton?.title = "Report improperly trimmed URL"
+        reportButton?.isEnabled = true
+
         lastUrl = copiedString
         let cleanedUrl = cleanUrl(url: copiedString)
 
@@ -61,7 +76,6 @@ public class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDele
             revertButton?.title = ""
             revertButton?.isHidden = true
         }
-
     }
 
     private func hideButton() {
@@ -89,6 +103,21 @@ public class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDele
 
         // @TODO: Better with data binding... somehow...
         onLaunchButton?.state = convertBoolToNSControlState(bool: !currentState.Disabled)
+    }
+
+    @objc func reportImproperlyTrimmedUri() {
+        // @TODO: Check that the domain belongs who it says it belongs to.
+        // i.e. this might not run forever and people shouldn't be able to register the domain + scoop
+        var request = URLRequest(url: URL(string: "http://127.0.0.1:5000/report-uri")!)
+        request.httpBody = lastUrl.data(using: .utf8)
+        request.httpMethod = "POST"
+        let session = URLSession.shared
+        let webtask = session.dataTask(with: request)
+        webtask.resume()
+
+        reportButton?.title = "Reported submitted—thanks!"
+        reportButton?.isEnabled = false
+        statusBarItem.title = "☑️"
     }
 
     @objc func quit() {
