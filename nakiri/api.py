@@ -26,19 +26,22 @@ def report_uri():
     except:
         pass
 
+    # This will mask all errors--not great for error reporting story.
+    # There's also nothing the client can do, so this is fine for now.
     return 'OK'
 
 
 def send_email(ip, uri):
     port = 465  # For SSL
     smtp_server = "smtp.gmail.com"
-    sender_email = os.getenv('GMAIL_USER')  # Enter your address
-    receiver_email = os.getenv('GMAIL_USER')  # Enter receiver address
+    sender_email = os.getenv('GMAIL_USER')
+    receiver_email = os.getenv('GMAIL_USER')
     password = os.getenv('GMAIL_APP_PASSWORD')
     message = f"""\
-    Subject: URL with spam reported
+From: Nakiri Feedback ({sender_email})
+Subject: URL with spam reported
 
-    User at {ip} reported uri {uri}."""
+User at {ip} reported uri {uri}."""
 
     context = ssl.create_default_context()
     with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
