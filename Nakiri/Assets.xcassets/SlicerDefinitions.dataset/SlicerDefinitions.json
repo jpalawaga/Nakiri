@@ -20,16 +20,14 @@
             "timestamp", "user_id", "preview_pb"
         ]
     },
-    "hosts": {
+    "clicktrackers_queryparam": {
         "google.com": {
-            "method": "query_param",
             "path":  "/url",
-            "strategy_detail": "q"
+            "qp_real_url": "q"
         },
         "facebook.com": {
-            "method": "query_param",
             "path": "/l.php",
-            "strategy_detail": "u"
+            "qp_real_url": "u"
         }
     }
 }
