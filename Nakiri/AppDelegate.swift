@@ -11,7 +11,7 @@ import os.log
 
 
 // @TODO: not the standard com.whatever format
-public var PLIST_PATH =  FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Library/LaunchAgents/Nakiri.plist")
+public var PLIST_PATH =  FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Library/LaunchAgents/com.nakiri.Nakiri.plist")
 
 public var APPLICATION_PATH = "/Applications/Nakiri.app"
 
@@ -37,13 +37,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDelegate {
         let applicationInstalled = FileManager.default.fileExists(atPath: APPLICATION_PATH)
         if (applicationInstalled && !configExist) {
             let args: [String] = ["/usr/bin/open", APPLICATION_PATH]
-            let launchAgent = LaunchAgent(Label: "Nakiri", Disabled: false, ProgramArguments: args, RunAtLoad: true)
+            let launchAgent = LaunchAgent(
+                Label: "Nakiri",
+                Disabled: false,
+                ProgramArguments: args,
+                RunAtLoad: true
+            )
 
             let encoder = PropertyListEncoder()
             encoder.outputFormat = .xml
             os_log("Writing startup plist file...")
             try! encoder.encode(launchAgent).write(to: Nakiri.PLIST_PATH)
-
         }
 
         // Build our "UI" (i.e. status bar menu)
@@ -68,7 +72,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDelegate {
             keyEquivalent: ""
         )
 
-
         // Setup the "Launch on Startup" button (only shows if the app is installed)
         if (FileManager.default.fileExists(atPath: APPLICATION_PATH)) {
             onLaunchButton = statusBarMenu.addItem(withTitle: "Launch on Startup", action: #selector(AppDelegate.toggleLaunchOnStartup), keyEquivalent: "")
@@ -78,7 +81,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDelegate {
         statusBarMenu.addItem(
           withTitle: "Quit",
           action: #selector(AppDelegate.quit),
-          keyEquivalent: "")
+          keyEquivalent: ""
+        )
 
         pasteboardWatcher.delegate = self
         pasteboardWatcher.startPolling(interval: 1)
@@ -90,7 +94,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDelegate {
             hideButton()
             return
         }
-
+        
         reportButton?.title = "Report improperly trimmed URL"
         reportButton?.isEnabled = true
 
@@ -205,4 +209,8 @@ func convertQueryItemsToDict(input: [URLQueryItem]?) -> [String:String] {
  */
 func convertBoolToNSControlState(bool: Bool) -> NSControl.StateValue {
     return bool ? .on : .off
+}
+
+class SlicerDefinitions : Codable {
+    public var query_parameters: [String: [String]]
 }
