@@ -7,6 +7,7 @@
 
 import Cocoa
 import SwiftUI
+import os.log
 
 
 // @TODO: not the standard com.whatever format
@@ -23,7 +24,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDelegate {
     private var reportButton: NSMenuItem?
     private var lastUrl = ""
     private let pasteboardWatcher = PasteboardWatcher()
-    var window: NSWindow!
 
     /**
      * Sets up the menu bar and starts polling
@@ -41,7 +41,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDelegate {
 
             let encoder = PropertyListEncoder()
             encoder.outputFormat = .xml
+            os_log("Writing startup plist file...")
             try! encoder.encode(launchAgent).write(to: Nakiri.PLIST_PATH)
+
         }
 
         // Build our "UI" (i.e. status bar menu)
@@ -80,20 +82,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDelegate {
 
         pasteboardWatcher.delegate = self
         pasteboardWatcher.startPolling(interval: 1)
-        
-        let contentView = ContentView()
-
-        // Create the window and set the content view.
-        window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 480, height: 300),
-            styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
-            backing: .buffered, defer: false)
-        window.isReleasedWhenClosed = false
-        window.center()
-        window.setFrameAutosaveName("Main Window")
-        window.contentView = NSHostingView(rootView: contentView)
-        window.makeKeyAndOrderFront(nil)
-        window.canHide = false
     }
 
     func newlyCopiedItem(copiedString: String) {

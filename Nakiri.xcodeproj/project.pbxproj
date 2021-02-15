@@ -54,6 +54,7 @@
 		1A948A6125DA04F8002A0366 /* LaunchAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchAgent.swift; sourceTree = "<group>"; };
 		1A948A6625DA0517002A0366 /* PasteboardWatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasteboardWatcher.swift; sourceTree = "<group>"; };
 		1A948A6B25DA053B002A0366 /* UrlClipperUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrlClipperUtils.swift; sourceTree = "<group>"; };
+		1A948A8425DA1891002A0366 /* libswiftOSLog.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libswiftOSLog.tbd; path = usr/lib/swift/libswiftOSLog.tbd; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,6 +89,7 @@
 				1A948A4425DA0446002A0366 /* NakiriTests */,
 				1A948A4F25DA0446002A0366 /* NakiriUITests */,
 				1A948A2D25DA0444002A0366 /* Products */,
+				1A948A8325DA1891002A0366 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -142,6 +144,14 @@
 				1A948A5225DA0446002A0366 /* Info.plist */,
 			);
 			path = NakiriUITests;
+			sourceTree = "<group>";
+		};
+		1A948A8325DA1891002A0366 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1A948A8425DA1891002A0366 /* libswiftOSLog.tbd */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
