@@ -14,6 +14,7 @@ let package = Package(
         name: "Nakiri", targets: ["Nakiri"]),
     ],
     dependencies: [
+        .package(url: "https://github.com/apple/swift-log.git", from: "1.2.0"),
     ],
     targets: [
         .target(
@@ -21,7 +22,7 @@ let package = Package(
             dependencies: []),
         .target(
             name: "NakiriApp",
-            dependencies: ["Nakiri"]),
+            dependencies: ["Nakiri", "Logging"]),
         .testTarget(
             name: "NakiriTests",
             dependencies: ["Nakiri"])

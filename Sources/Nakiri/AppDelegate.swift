@@ -83,6 +83,10 @@ public class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDele
     }
     
     // --- Menu Bar Funcs
+    
+    /**
+     * Undoes a "trimming," by restoring the original pasteboard entry.
+     */
     @objc func revert() {
         // We don't want to trigger the URL cleaning again.
         pasteboardWatcher.changeCount += 1
@@ -92,19 +96,13 @@ public class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDele
         
         hideButton()
     }
-    
-    @objc func toggleLaunchOnStartup() {
-        let currentState = try! PropertyListDecoder().decode(LaunchAgent.self, from: Data(contentsOf: PLIST_PATH))
-        
-        currentState.Disabled = !currentState.Disabled
-        let encoder = PropertyListEncoder()
-        encoder.outputFormat = .xml
-        try! encoder.encode(currentState).write(to: PLIST_PATH)
 
-        // @TODO: Better with data binding... somehow...
-        onLaunchButton?.state = convertBoolToNSControlState(bool: !currentState.Disabled)
-    }
-
+    /**
+     * Reports to the backend the original, untrimmed URI, so that we can build a bigger index.
+     *
+     * This is quite rudimentary, but that's ok for now. In time we should probably have some sort of a UI so that
+     * people can specify WHICH QPs need to be saved or removed.
+     */
     @objc func reportImproperlyTrimmedUri() {
         // @TODO: Check that the domain belongs who it says it belongs to.
         // i.e. this might not run forever and people shouldn't be able to register the domain + scoop
@@ -118,6 +116,25 @@ public class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDele
         reportButton?.title = "Reported submitted—thanks!"
         reportButton?.isEnabled = false
         statusBarItem.title = "☑️"
+    }
+    
+    /**
+     * Changes whether or not if Nakiri will launch on boot.
+     *
+     * Side effects:
+     *  - modify the plist to enable or disable whether or not if the app will boot on startup.
+     *  - change the menu item's state to reflect what was just written to disk.
+     */
+    @objc func toggleLaunchOnStartup() {
+        let currentState = try! PropertyListDecoder().decode(LaunchAgent.self, from: Data(contentsOf: PLIST_PATH))
+        
+        currentState.Disabled = !currentState.Disabled
+        let encoder = PropertyListEncoder()
+        encoder.outputFormat = .xml
+        try! encoder.encode(currentState).write(to: PLIST_PATH)
+
+        // @TODO: Better with data binding... somehow...
+        onLaunchButton?.state = convertBoolToNSControlState(bool: !currentState.Disabled)
     }
 
     @objc func quit() {

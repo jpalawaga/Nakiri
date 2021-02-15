@@ -47,6 +47,9 @@ func removeUnnecessaryQueryParams(url: String) -> String {
         // Amazon
         "dchild", "keywords", "qid", "sr", "psc", "cv_ct_cx", "spLa", // Do we want do keep or delete keywords?
         "pd_rd_i", "pd_rd_r", "pd_rd_w", "pd_rd_wg", "pf_rd_p", "pf_rd_r",
+        
+        // tiktok - user_id and timestamp seem like they should probably be specific to tiktok.
+        "_d", "sec_user_id", "share_item_id", "share_link_id", "timestamp", "tt_from", "u_code", "user_id"
     ]
 
     if var components = URLComponents(string: url) {

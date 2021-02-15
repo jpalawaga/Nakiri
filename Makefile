@@ -11,7 +11,9 @@ build:
 
 copySupportFiles:
 	mkdir -p ${APP_DIRECTORY}/Contents/MacOS/
+	mkdir -p ${APP_DIRECTORY}/Contents/Resources/
 	cp ${SUPPORTFILES}/MainInfo.plist ${APP_DIRECTORY}/Contents/Info.plist
+	cp ${SUPPORTFILES}/SlicerDefinitions.json ${APP_DIRECTORY}/Contents/Resources/SlicerDefinitions.json
 	cp ${BUILD_DIRECTORY}/${CFBUNDLEEXECUTABLE}App ${APP_DIRECTORY}/Contents/MacOS/
 
 run: clean install
