@@ -1,27 +1,57 @@
+//
+//  AppDelegate.swift
+//  Nakiri
+//
+//  Created by James Palawaga on 2/14/21.
+//
+
 import Cocoa
+import SwiftUI
+
 
 // @TODO: not the standard com.whatever format
 public var PLIST_PATH =  FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Library/LaunchAgents/Nakiri.plist")
 
 public var APPLICATION_PATH = "/Applications/Nakiri.app"
 
-public class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDelegate {
+
+@main
+class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDelegate {
     private var statusBarItem: NSStatusItem!
     private var revertButton: NSMenuItem?
     private var onLaunchButton: NSMenuItem?
     private var reportButton: NSMenuItem?
     private var lastUrl = ""
     private let pasteboardWatcher = PasteboardWatcher()
+    var window: NSWindow!
 
     /**
      * Sets up the menu bar and starts polling
      */
     public func applicationDidFinishLaunching(_ aNotification: Notification) {
+        // Hide the dock icon
+        NSApp.setActivationPolicy(.accessory)
+ 
+        // Write the startup config if necessary.
+        let configExist = FileManager.default.fileExists(atPath: PLIST_PATH.absoluteString)
+        let applicationInstalled = FileManager.default.fileExists(atPath: APPLICATION_PATH)
+        if (applicationInstalled && !configExist) {
+            let args: [String] = ["/usr/bin/open", APPLICATION_PATH]
+            let launchAgent = LaunchAgent(Label: "Nakiri", Disabled: false, ProgramArguments: args, RunAtLoad: true)
+
+            let encoder = PropertyListEncoder()
+            encoder.outputFormat = .xml
+            try! encoder.encode(launchAgent).write(to: Nakiri.PLIST_PATH)
+        }
+
+        // Build our "UI" (i.e. status bar menu)
         let statusBar = NSStatusBar.system
         statusBarItem = statusBar.statusItem(withLength: NSStatusItem.variableLength)
 
         let statusBarMenu = NSMenu(title: "Nakiri Menu")
         statusBarItem.menu = statusBarMenu
+        // Note: It exists, but just has no icon.
+        // The blankness is good for testing purposes but should probably set to just visibility=none.
 
         // Set up the "undo slice" button
         revertButton = statusBarMenu.addItem(
@@ -50,6 +80,20 @@ public class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDele
 
         pasteboardWatcher.delegate = self
         pasteboardWatcher.startPolling(interval: 1)
+        
+        let contentView = ContentView()
+
+        // Create the window and set the content view.
+        window = NSWindow(
+            contentRect: NSRect(x: 0, y: 0, width: 480, height: 300),
+            styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
+            backing: .buffered, defer: false)
+        window.isReleasedWhenClosed = false
+        window.center()
+        window.setFrameAutosaveName("Main Window")
+        window.contentView = NSHostingView(rootView: contentView)
+        window.makeKeyAndOrderFront(nil)
+        window.canHide = false
     }
 
     func newlyCopiedItem(copiedString: String) {
@@ -68,6 +112,7 @@ public class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDele
         NSPasteboard.general.clearContents()
         NSPasteboard.general.setString(cleanedUrl, forType: NSPasteboard.PasteboardType.string)
         statusBarItem.button?.title = "🔪"
+        statusBarItem.isVisible = true
 
         if (lastUrl != cleanedUrl) {
             revertButton?.title = "Revert \(friendlyTruncateUrl(url: cleanedUrl))"
@@ -80,6 +125,7 @@ public class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDele
 
     private func hideButton() {
         statusBarItem.button?.title = ""
+        statusBarItem.isVisible = false
     }
     
     // --- Menu Bar Funcs
@@ -115,7 +161,7 @@ public class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDele
 
         reportButton?.title = "Reported submitted—thanks!"
         reportButton?.isEnabled = false
-        statusBarItem.title = "☑️"
+        statusBarItem.button?.title = "☑️"
     }
     
     /**
@@ -140,6 +186,21 @@ public class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDele
     @objc func quit() {
         NSApplication.shared.terminate(self)
     }
+    
+    /*
+    var window: NSWindow!
+
+
+    func applicationDidFinishLaunching(_ aNotification: Notification) {
+        // Create the SwiftUI view that provides the window contents.
+
+    }
+
+    func applicationWillTerminate(_ aNotification: Notification) {
+        // Insert code here to tear down your application
+    }
+*/
+
 }
 
 func convertQueryItemsToDict(input: [URLQueryItem]?) -> [String:String] {

@@ -1,6 +1,6 @@
 //
 //  LaunchAgent.swift
-//  
+//
 //
 //  Created by James Palawaga on 2/12/21.
 //
@@ -9,7 +9,7 @@
 import Foundation
 
 /**
- * Data class used to encode and decode our plist launchd configuration. 
+ * Data class used to encode and decode our plist launchd configuration.
  */
 public class LaunchAgent : Codable {
     public var Label: String
