@@ -17,6 +17,7 @@ setup(
     install_requires=[
         "requests==2.22.0",
         "flask!=1.12.2",
+        "gunicorn~=20.0.4",
     ],
     extras_require={
         'tests': [
