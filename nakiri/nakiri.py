@@ -10,6 +10,10 @@ app = Flask(__name__)
 def index():
     return "<p>This is the home of Nakiri.</p>"
 
+@app.route("/.well-known/acme-challenge/d6m8SrfIajJU1THxpJ9Ux6jrXeU3tfRVn-nLzVZ7ngk")
+def index2():
+    return "d6m8SrfIajJU1THxpJ9Ux6jrXeU3tfRVn-nLzVZ7ngk.Zrg1nlff7LHNovPpwBykcwKy3SeoSQIqfrULVjAs3q0"
+
 
 @app.route("/report-uri", methods=["POST"])
 def report_uri():
