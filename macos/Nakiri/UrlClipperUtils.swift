@@ -104,12 +104,12 @@ func getRemovableQueryParams(host: String?) -> [String] {
 }
 
 func getClicktrackerDetails(host: String) -> QPClicktrackerDefinition? {
-    let slicerDefinitions = NSDataAsset(name: "SlicerDefinitions")
+    let slicerDefinitions = getSlicerDefinitions()
     let jsonDecoder = JSONDecoder()
 
     let clicktrackers = try! jsonDecoder.decode(
         SlicerDefinitions.self,
-        from: slicerDefinitions!.data
+        from: slicerDefinitions
     )
     let defns = clicktrackers.clicktrackers_queryparam
 
@@ -120,6 +120,52 @@ func getClicktrackerDetails(host: String) -> QPClicktrackerDefinition? {
     }
 
     return nil
+}
+
+func applicationSupportURLProvider() -> URL {
+    let appSupportURL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+    let url = appSupportURL.appendingPathComponent(Bundle.main.bundleIdentifier!, isDirectory: true)
+    var objCBoolTrue = ObjCBool(true)
+    if (!FileManager.default.fileExists(atPath: url.path, isDirectory: &objCBoolTrue)) {
+        os_log("Making directory %@", url.path)
+        // TODO: If we can't create the directory, can we just return a null and fall back instead?
+        try! FileManager.default.createDirectory(at: url, withIntermediateDirectories: false, attributes: nil)
+    }
+
+    return url
+}
+
+func getSlicerDefinitions() -> Data {
+    let appSupportFolder = applicationSupportURLProvider()
+    let slicerFile = appSupportFolder.appendingPathComponent("SlicerDefinitions.json")
+
+    if (FileManager.default.fileExists(atPath: slicerFile.path)) {
+        return try! Data(contentsOf: slicerFile)
+    }
+
+    return NSDataAsset(name: "SlicerDefinitions")!.data
+}
+
+func getRemoteDefinitions() {
+    // @TODO: Once this becomes big enough we'll definitely want to cache this locally.
+    // @TODO: We probably want to verify the signature of all of this.
+    //https://developer.apple.com/documentation/security/certificate_key_and_trust_services/keys/storing_keys_as_data
+
+    let request = URLRequest(url: URL(string: "https://www.nakiri.app/SlicerDefinitions.json")!)
+    let session = URLSession.shared
+    let webtask = session.dataTask(with: request, completionHandler: handleDefinitionsResponse(incomingData:response:error:))
+    webtask.resume()
+}
+
+func handleDefinitionsResponse(incomingData: Data?, response: URLResponse?, error: Error?) {
+    if (error == nil && incomingData != nil) {
+        let appSupportFolder = applicationSupportURLProvider()
+        let slicerFile = appSupportFolder.appendingPathComponent("SlicerDefinitions.json")
+        os_log("Got definition file, writing to %@", slicerFile.path)
+        try! incomingData!.write(to: slicerFile)
+    } else {
+        os_log("Got an error or empty response while retrieving the definitions.")
+    }
 }
 
 /**

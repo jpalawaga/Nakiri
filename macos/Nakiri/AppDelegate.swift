@@ -86,6 +86,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDelegate {
 
         pasteboardWatcher.delegate = self
         pasteboardWatcher.startPolling(interval: 1)
+        getRemoteDefinitions()
     }
 
     func newlyCopiedItem(copiedString: String) {
