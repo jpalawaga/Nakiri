@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    return "<p>This is the home of Nakiri.</p>"
+    return "<p>This is the home of Nakiri. :)</p>"
 
 @app.route("/report-uri", methods=["POST"])
 def report_uri_post():
