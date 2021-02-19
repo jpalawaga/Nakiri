@@ -144,9 +144,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDelegate {
     @objc func reportImproperlyTrimmedUri() {
         // @TODO: Check that the domain belongs who it says it belongs to.
         // i.e. this might not run forever and people shouldn't be able to register the domain + scoop
-        var request = URLRequest(url: URL(string: "http://127.0.0.1:5000/report-uri")!)
-        request.httpBody = lastUrl.data(using: .utf8)
-        request.httpMethod = "POST"
+        // @TODO: Go back to POST once our domains are straightend out.
+        let uri = lastUrl.data(using: .utf8)!.base64EncodedString()
+        let request = URLRequest(url: URL(string: "https://api.nakiri.app/report-uri?uri=\(uri)")!)
         let session = URLSession.shared
         let webtask = session.dataTask(with: request)
         webtask.resume()
