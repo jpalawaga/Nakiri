@@ -1,0 +1,26 @@
+{
+  "name": "Nakiri",
+  "description": "Runs the backend for Nakiri",
+  "image": "heroku/python",
+  "repository": "https://github.com/jpalawaga/NakiriWeb",
+  "keywords": ["python", "jpalawaga" ],
+  "addons": [],
+  "env": {
+    "GMAIL_USER": {
+      "description": "The gmail user that will be used to login and send email",
+      "generator": "secret"
+    },
+    "GMAIL_APP_PASSWORD": {
+      "description": "The gmail app password that will be used to login and send email",
+      "generator": "secret"
+    }
+  },
+  "environments": {
+    "test": {
+      "scripts": {
+        "test": "python -c \"print('Testing complete')\""
+      }
+    }
+  }
+}
+
