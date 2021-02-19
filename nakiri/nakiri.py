@@ -16,7 +16,7 @@ def index2():
 
 
 @app.route("/report-uri", methods=["POST"])
-def report_uri():
+def report_uri_post():
     # This is really an error state, but we'll just be transparent
     # to the user. Besides, this way, there's fewer error states to worry about
     # for the app, and less surface area to worry about for security purposes.
@@ -25,6 +25,25 @@ def report_uri():
 
     try:
         data = request.get_data(as_text=True)
+        if (data.startswith('http')):
+            send_email(request.remote_addr, data)
+    except:
+        pass
+
+    # This will mask all errors--not great for error reporting story.
+    # There's also nothing the client can do, so this is fine for now.
+    return 'OK'
+
+@app.route("/report-uri", methods=["GET"])
+def report_uri_get():
+    uri = request.args.get('uri')
+
+    # Should never be this long anyhow, given http rfc.
+    if len(uri) > 2048:
+        return 'OK'
+
+    try:
+        data = base64.b64decode(uri)
         if (data.startswith('http')):
             send_email(request.remote_addr, data)
     except:
