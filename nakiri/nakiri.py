@@ -1,3 +1,4 @@
+import base64
 import os
 import smtplib, ssl
 
@@ -9,11 +10,6 @@ app = Flask(__name__)
 @app.route("/")
 def index():
     return "<p>This is the home of Nakiri.</p>"
-
-@app.route("/.well-known/acme-challenge/d6m8SrfIajJU1THxpJ9Ux6jrXeU3tfRVn-nLzVZ7ngk")
-def index2():
-    return "d6m8SrfIajJU1THxpJ9Ux6jrXeU3tfRVn-nLzVZ7ngk.Zrg1nlff7LHNovPpwBykcwKy3SeoSQIqfrULVjAs3q0"
-
 
 @app.route("/report-uri", methods=["POST"])
 def report_uri_post():
@@ -43,7 +39,7 @@ def report_uri_get():
         return 'OK'
 
     try:
-        data = base64.b64decode(uri)
+        data = base64.b64decode(uri).decode("utf-8")
         if (data.startswith('http')):
             send_email(request.remote_addr, data)
     except:
