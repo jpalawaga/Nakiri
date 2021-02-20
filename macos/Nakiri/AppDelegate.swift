@@ -22,6 +22,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDelegate {
     private var revertButton: NSMenuItem?
     private var onLaunchButton: NSMenuItem?
     private var reportButton: NSMenuItem?
+    public var updateButton: NSMenuItem?
     private var lastUrl = ""
     private let pasteboardWatcher = PasteboardWatcher()
 
@@ -78,6 +79,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDelegate {
             onLaunchButton?.state = convertBoolToNSControlState(bool: currentLaunchdState())
         }
 
+        updateButton = statusBarMenu.addItem(
+            withTitle: "Update Available",
+            action: #selector(AppDelegate.openUpdate),
+            keyEquivalent: ""
+        )
+        updateButton?.isHidden = true
+
         statusBarMenu.addItem(
           withTitle: "Quit",
           action: #selector(AppDelegate.quit),
@@ -87,6 +95,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDelegate {
         pasteboardWatcher.delegate = self
         pasteboardWatcher.startPolling(interval: 1)
         getRemoteDefinitions()
+        let checker = updateChecker(callbackWhenUpdateAvailable: enableUpdateButton)
+        checker.beginVersionCheck()
+    }
+
+    func enableUpdateButton() {
+        updateButton?.isHidden = false
     }
 
     func newlyCopiedItem(copiedString: String) {
@@ -174,6 +188,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDelegate {
 
         // @TODO: Better with data binding... somehow...
         onLaunchButton?.state = convertBoolToNSControlState(bool: !currentState.Disabled)
+    }
+
+    @objc func openUpdate() {
+        NSWorkspace.shared.open(URL(string: "https://nakiri.app/updates.html")!)
     }
 
     @objc func quit() {
