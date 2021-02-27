@@ -15,8 +15,10 @@
             "dchild", "keywords", "qid", "sr", "psc", "cv_ct_cx", "spLa",
             "pd_rd_i", "pd_rd_r", "pd_rd_w", "pd_rd_wg", "pf_rd_p", "pf_rd_r",
             "_d", "sec_user_id", "share_item_id", "share_link_id", "tt_from", "u_code",
-            "aqs", "sourceid", "oq", "ie",
-            "chn", "norover", "mkevt", "mkrid", "mkcid", "targetid", "device", "mktype", "googleloc", "poi", "campaignid", "mkgroupid", "rlsatarget", "abcId", "gclid"
+            "aqs", "sourceid", "ie",
+            "chn", "norover", "mkevt", "mkrid", "mkcid", "targetid", "device", "mktype",
+            "googleloc", "poi", "campaignid", "mkgroupid", "rlsatarget", "abcId", "gclid",
+            "is_copy_url", "is_from_webapp"
         ],
         "tiktok.com": [
             "timestamp", "user_id", "preview_pb"
@@ -36,3 +38,4 @@
         }
     }
 }
+

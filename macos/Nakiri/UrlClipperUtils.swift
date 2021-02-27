@@ -147,7 +147,7 @@ func getSlicerDefinitions() -> Data {
 }
 
 func getRemoteDefinitions() {
-    // @TODO: Once this becomes big enough we'll definitely want to cache this locally.
+    // @TODO: Once this becomes big enough we'll definitely want to cache locally using etags.
     // @TODO: We probably want to verify the signature of all of this.
     //https://developer.apple.com/documentation/security/certificate_key_and_trust_services/keys/storing_keys_as_data
 
