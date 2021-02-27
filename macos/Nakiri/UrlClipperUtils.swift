@@ -84,9 +84,9 @@ func isUrlWithQueryParams(url: String) -> Bool {
  * Also: the host stuff is jank AF. Might want to implement maybe a trie or some other spell-checking tech.
  */
 func getRemovableQueryParams(host: String?) -> [String] {
-    let slicerDefinitions = NSDataAsset(name: "SlicerDefinitions")
+    let slicerDefinitions = getSlicerDefinitions()
     let jsonDecoder = JSONDecoder()
-    let definitions = try! jsonDecoder.decode(SlicerDefinitions.self, from: slicerDefinitions!.data)
+    let definitions = try! jsonDecoder.decode(SlicerDefinitions.self, from: slicerDefinitions)
     let trimmedHost: String
     if (host != nil && host?.hasPrefix("www.") ?? false) {
         trimmedHost = String(host!.dropFirst(4))
