@@ -42,31 +42,6 @@ class updateChecker {
     }
 }
 
-
-/*
-class SemVer {
-    // I know that there are libraries that will do this for me.
-    // But, in the interest of keeping filesize to a minimum, Imma implment it myself.
-    // Not the best engineering practice but yOlOoooo.
-    let versionString: String
-    let major: Int
-    let minor: Int
-    let patch: Int
-    init(versionString: String) {
-        self.versionString = versionString
-
-        let versionWithoutv = versionString.drop { $0 == "v" }
-        let version, release = versionWithoutv.split(separator: "-")
-        let arr = versionWithoutv.split(separator: ".")
-
-        major = Int(arr[0])!
-        minor = Int(arr[1])!
-        patch = Int(arr[2])!
-    }
-
-}*/
-
-
 /**
  * Class for representing github's response
  *
