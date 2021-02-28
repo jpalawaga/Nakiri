@@ -1,40 +1,42 @@
 {
-    "query_parameters": {
-        "global": [
-            "u",
-            "h",
-            "utm_source",
-            "utm_medium",
-            "utm_campaign",
-            "utm_term",
-            "utm_content",
-            "fbclid",
-            "src", "vertical","ref_src",
-            "rlz", "source", "sxsrf", "tbm", "sa", "ved", "biw", "bih",
-            "si",
-            "dchild", "keywords", "qid", "sr", "psc", "cv_ct_cx", "spLa",
-            "pd_rd_i", "pd_rd_r", "pd_rd_w", "pd_rd_wg", "pf_rd_p", "pf_rd_r",
-            "_d", "sec_user_id", "sec_uid", "share_item_id", "share_link_id", "tt_from", "u_code", "share_author_id",
-            "aqs", "sourceid", "ie",
-            "chn", "norover", "mkevt", "mkrid", "mkcid", "targetid", "device", "mktype",
-            "googleloc", "poi", "campaignid", "mkgroupid", "rlsatarget", "abcId", "gclid",
-            "is_copy_url", "is_from_webapp", "cid", "rid"
-        ],
-        "tiktok.com": [
-            "timestamp", "user_id", "preview_pb", "language"
-        ],
-        "ebay.com": [
-            "itemid", "merchantid"
-        ]
-    },
-    "clicktrackers_queryparam": {
-        "google.com": {
-            "path":  "/url",
-            "qp_real_url": "q"
+    "rules": {
+        "query_parameters": {
+            "global": [
+                "u",
+                "h",
+                "utm_source",
+                "utm_medium",
+                "utm_campaign",
+                "utm_term",
+                "utm_content",
+                "fbclid",
+                "src", "vertical","ref_src",
+                "rlz", "source", "sxsrf", "tbm", "sa", "ved", "biw", "bih",
+                "si",
+                "dchild", "keywords", "qid", "sr", "psc", "cv_ct_cx", "spLa",
+                "pd_rd_i", "pd_rd_r", "pd_rd_w", "pd_rd_wg", "pf_rd_p", "pf_rd_r",
+                "_d", "sec_user_id", "sec_uid", "share_item_id", "share_link_id", "tt_from", "u_code", "share_author_id",
+                "aqs", "sourceid", "ie",
+                "chn", "norover", "mkevt", "mkrid", "mkcid", "targetid", "device", "mktype",
+                "googleloc", "poi", "campaignid", "mkgroupid", "rlsatarget", "abcId", "gclid",
+                "is_copy_url", "is_from_webapp", "cid", "rid"
+            ],
+            "tiktok.com": [
+                "timestamp", "user_id", "preview_pb", "language"
+            ],
+            "ebay.com": [
+                "itemid", "merchantid"
+            ]
         },
-        "facebook.com": {
-            "path": "/l.php",
-            "qp_real_url": "u"
+        "clicktrackers_queryparam": {
+            "google.com": {
+                "path":  "/url",
+                "qp_real_url": "q"
+            },
+            "facebook.com": {
+                "path": "/l.php",
+                "qp_real_url": "u"
+            }
         }
     }
 }

@@ -86,9 +86,9 @@ func isUrlWithQueryParams(url: String) -> Bool {
  * Also: the host stuff is jank AF. Might want to implement maybe a trie or some other spell-checking tech.
  */
 func getRemovableQueryParams(host: String?) -> [String] {
-    let rules = getRules()
+    let ruleText = getRules()
     let jsonDecoder = JSONDecoder()
-    let definitions = try! jsonDecoder.decode(RuleDefinitions.self, from: rules)
+    let ruleContainer = try! jsonDecoder.decode(RuleContainer.self, from: ruleText)
     let trimmedHost: String
     if (host != nil && host?.hasPrefix("www.") ?? false) {
         trimmedHost = String(host!.dropFirst(4))
@@ -97,8 +97,9 @@ func getRemovableQueryParams(host: String?) -> [String] {
     }
 
     var paramToReturn: [String] = []
-    paramToReturn.append(contentsOf: definitions.query_parameters["global"] ?? [])
-    paramToReturn.append(contentsOf: definitions.query_parameters[trimmedHost] ?? [])
+    let definitions = ruleContainer.rules.query_parameters
+    paramToReturn.append(contentsOf: definitions["global"] ?? [])
+    paramToReturn.append(contentsOf: definitions[trimmedHost] ?? [])
 
     os_log("Found %d candidates for host %@", paramToReturn.count, trimmedHost)
 
@@ -106,14 +107,14 @@ func getRemovableQueryParams(host: String?) -> [String] {
 }
 
 func getClicktrackerDetails(host: String) -> QPClicktrackerDefinition? {
-    let rules = getRules()
+    let ruleText = getRules()
     let jsonDecoder = JSONDecoder()
 
-    let clicktrackers = try! jsonDecoder.decode(
-        RuleDefinitions.self,
-        from: rules
+    let rules = try! jsonDecoder.decode(
+        RuleContainer.self,
+        from: ruleText
     )
-    let defns = clicktrackers.clicktrackers_queryparam
+    let defns = rules.rules.clicktrackers_queryparam
 
     for clicktracker in defns {
         if (host.hasSuffix(clicktracker.key)) {
@@ -168,6 +169,10 @@ func handleDefinitionsResponse(incomingData: Data?, response: URLResponse?, erro
     } else {
         os_log("Got an error or empty response while retrieving the definitions.")
     }
+}
+
+class RuleContainer : Codable {
+    public var rules: RuleDefinitions
 }
 
 /**
