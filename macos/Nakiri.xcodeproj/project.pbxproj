@@ -200,6 +200,7 @@
 				1A948A2825DA0444002A0366 /* Sources */,
 				1A948A2925DA0444002A0366 /* Frameworks */,
 				1A948A2A25DA0444002A0366 /* Resources */,
+				1A8B832F25EB90FC00383F90 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -314,6 +315,26 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		1A8B832F25EB90FC00383F90 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cp ../docs/SlicerDefinitions.json Nakiri/Assets.xcassets/SlicerDefinitions.dataset/SlicerDefinitions.json\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		1A948A2825DA0444002A0366 /* Sources */ = {
