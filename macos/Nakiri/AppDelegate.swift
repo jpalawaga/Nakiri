@@ -191,7 +191,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDelegate {
     }
 
     @objc func openUpdate() {
-        NSWorkspace.shared.open(URL(string: "https://nakiri.app/updates.html")!)
+        NSWorkspace.shared.open(URL(string: "https://github.com/jpalawaga/Nakiri/releases")!)
     }
 
     @objc func quit() {

@@ -31,11 +31,19 @@ class updateChecker {
     private func handleReleaseResponse(incomingData: Data?, response: URLResponse?, error: Error?) {
         if (error == nil && incomingData != nil) {
             let decoder = JSONDecoder()
-            let response = try? decoder.decode(ReleaseResponse.self, from: incomingData!)
-            let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
+            guard let response = try? decoder.decode(ReleaseResponse.self, from: incomingData!) else {
+                return
+            }
 
-            // @TODO: This will not do lol. Need to break it down by components.
-            if (response?.tagName != version) {
+            guard let latestVersion = try? SemVer(versionString: response.tagName) else {
+                return
+            }
+
+            let currentVersion = try! SemVer(
+                versionString: (Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String)!
+            )
+
+            if (latestVersion > currentVersion) {
                 callbackWhenUpdateAvailable()
             }
         }
