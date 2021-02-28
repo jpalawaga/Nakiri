@@ -27,8 +27,8 @@ lightly!
 The SlicerDefinitions.json file is used by the macos app and should not be moved.
 It is used in two ways.
 
- # For being served over the web
- # As a build step, it is copied from the docs location into the macos app at
+1. For being served over the web
+1. As a build step, it is copied from the docs location into the macos app at
    build time. docs/SlicerDefinitions.json is the source of truth of the 
    definitions lib.
 
