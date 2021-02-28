@@ -18,7 +18,7 @@
             "aqs", "sourceid", "ie",
             "chn", "norover", "mkevt", "mkrid", "mkcid", "targetid", "device", "mktype",
             "googleloc", "poi", "campaignid", "mkgroupid", "rlsatarget", "abcId", "gclid",
-            "is_copy_url", "is_from_webapp"
+            "is_copy_url", "is_from_webapp", "cid", "rid"
         ],
         "tiktok.com": [
             "timestamp", "user_id", "preview_pb"
