@@ -98,7 +98,7 @@ func getRemovableQueryParams(host: String?) -> [String] {
 
     var paramToReturn: [String] = []
     let definitions = ruleContainer.rules.query_parameters
-    paramToReturn.append(contentsOf: definitions["global"] ?? [])
+    paramToReturn.append(contentsOf: definitions["*"] ?? [])
     paramToReturn.append(contentsOf: definitions[trimmedHost] ?? [])
 
     os_log("Found %d candidates for host %@", paramToReturn.count, trimmedHost)
