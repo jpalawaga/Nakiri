@@ -332,7 +332,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cp ../docs/SlicerDefinitions.json Nakiri/Assets.xcassets/SlicerDefinitions.dataset/SlicerDefinitions.json\n";
+			shellScript = "cp ../docs/engine/v1/rules.json Nakiri/Assets.xcassets/rules.dataset/rules.json\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

@@ -2,6 +2,8 @@ import Foundation
 import SwiftUI
 import os.log
 
+let remoteRulesUrl = "https://www.nakiri.app/engine/v1/rules.json"
+
 public func cleanUrl(url: String) -> String {
     let trimmedURL = stripClicktrackers(url: url)
     return removeUnnecessaryQueryParams(url: trimmedURL)
@@ -84,9 +86,9 @@ func isUrlWithQueryParams(url: String) -> Bool {
  * Also: the host stuff is jank AF. Might want to implement maybe a trie or some other spell-checking tech.
  */
 func getRemovableQueryParams(host: String?) -> [String] {
-    let slicerDefinitions = getSlicerDefinitions()
+    let rules = getRules()
     let jsonDecoder = JSONDecoder()
-    let definitions = try! jsonDecoder.decode(SlicerDefinitions.self, from: slicerDefinitions)
+    let definitions = try! jsonDecoder.decode(RuleDefinitions.self, from: rules)
     let trimmedHost: String
     if (host != nil && host?.hasPrefix("www.") ?? false) {
         trimmedHost = String(host!.dropFirst(4))
@@ -104,12 +106,12 @@ func getRemovableQueryParams(host: String?) -> [String] {
 }
 
 func getClicktrackerDetails(host: String) -> QPClicktrackerDefinition? {
-    let slicerDefinitions = getSlicerDefinitions()
+    let rules = getRules()
     let jsonDecoder = JSONDecoder()
 
     let clicktrackers = try! jsonDecoder.decode(
-        SlicerDefinitions.self,
-        from: slicerDefinitions
+        RuleDefinitions.self,
+        from: rules
     )
     let defns = clicktrackers.clicktrackers_queryparam
 
@@ -135,15 +137,15 @@ func applicationSupportURLProvider() -> URL {
     return url
 }
 
-func getSlicerDefinitions() -> Data {
+func getRules() -> Data {
     let appSupportFolder = applicationSupportURLProvider()
-    let slicerFile = appSupportFolder.appendingPathComponent("SlicerDefinitions.json")
+    let slicerFile = appSupportFolder.appendingPathComponent("rules.json")
 
     if (FileManager.default.fileExists(atPath: slicerFile.path)) {
         return try! Data(contentsOf: slicerFile)
     }
 
-    return NSDataAsset(name: "SlicerDefinitions")!.data
+    return NSDataAsset(name: "rules")!.data
 }
 
 func getRemoteDefinitions() {
@@ -151,7 +153,7 @@ func getRemoteDefinitions() {
     // @TODO: We probably want to verify the signature of all of this.
     //https://developer.apple.com/documentation/security/certificate_key_and_trust_services/keys/storing_keys_as_data
 
-    let request = URLRequest(url: URL(string: "https://www.nakiri.app/SlicerDefinitions.json")!)
+    let request = URLRequest(url: URL(string: remoteRulesUrl)!)
     let session = URLSession.shared
     let webtask = session.dataTask(with: request, completionHandler: handleDefinitionsResponse(incomingData:response:error:))
     webtask.resume()
@@ -160,9 +162,9 @@ func getRemoteDefinitions() {
 func handleDefinitionsResponse(incomingData: Data?, response: URLResponse?, error: Error?) {
     if (error == nil && incomingData != nil) {
         let appSupportFolder = applicationSupportURLProvider()
-        let slicerFile = appSupportFolder.appendingPathComponent("SlicerDefinitions.json")
-        os_log("Got definition file, writing to %@", slicerFile.path)
-        try! incomingData!.write(to: slicerFile)
+        let ruleFile = appSupportFolder.appendingPathComponent("rules.json")
+        os_log("Got definition file, writing to %@", ruleFile.path)
+        try! incomingData!.write(to: ruleFile)
     } else {
         os_log("Got an error or empty response while retrieving the definitions.")
     }
@@ -177,7 +179,7 @@ func handleDefinitionsResponse(incomingData: Data?, response: URLResponse?, erro
  * As a thought, this could be changed to be well-formatted like {"host": google, "query_params": []}, but it just involves
  * more transformation, and I don't see an apparent benefit just yet.
  */
-class SlicerDefinitions : Codable {
+class RuleDefinitions : Codable {
     public var query_parameters: [String: [String]]
     public var clicktrackers_queryparam: [String: QPClicktrackerDefinition]
 }

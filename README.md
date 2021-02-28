@@ -24,12 +24,12 @@ Github deploys this using Pages. Any time you change contents of docs and commit
 it to master, the changes will be instantly deployed to www.nakiri.app. Tread
 lightly!
 
-The SlicerDefinitions.json file is used by the macos app and should not be moved.
+The rules.json file is used by the macos app and should not be moved.
 It is used in two ways.
 
 1. For being served over the web
 1. As a build step, it is copied from the docs location into the macos app at
-   build time. docs/SlicerDefinitions.json is the source of truth of the 
+   build time. docs/rules.json is the source of truth of the 
    definitions lib.
 
 **api.nakiri.app** aka backend
@@ -54,7 +54,7 @@ Shouldn't be much to say. You should be able to open this bad boy in xcode and
 compile it manually.
 
 As per the above section, the rules engine is copied in from 
-docs/SlicerDefinitions.json at buildtime.
+docs/rules.json at buildtime.
 
 The versioning for the app is done both by git tag (git tags refer to app version
 at this time, not website or backend version). The app has an update notification
