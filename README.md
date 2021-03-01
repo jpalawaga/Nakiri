@@ -1,6 +1,6 @@
 # Nakiri
 
-## Because friends send friends spammy-ass links.
+## Because friends don't send friends spammy-ass links.
 
 Nakiri is a macos app that runs silently in the background, cleaning up URLs 
 that land on your clipboard so you look like a pro 😎
