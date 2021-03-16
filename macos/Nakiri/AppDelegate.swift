@@ -48,7 +48,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, PasteboardWatcherDelegate {
             let encoder = PropertyListEncoder()
             encoder.outputFormat = .xml
             os_log("Writing startup plist file...")
-            try! encoder.encode(launchAgent).write(to: Nakiri.PLIST_PATH)
+            do {
+                // Try to create the LaunchAgents folder in case if it doesn't exist
+                try? FileManager.default.createDirectory(at: PLIST_PATH.deletingLastPathComponent(), withIntermediateDirectories: false, attributes: .none)
+                try encoder.encode(launchAgent).write(to: Nakiri.PLIST_PATH)
+            } catch {
+                os_log("Error creating launchagent plist. Error: %@", error.localizedDescription)
+            }
         }
 
         // Build our "UI" (i.e. status bar menu)
